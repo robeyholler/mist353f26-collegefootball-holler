@@ -8,10 +8,26 @@ ALTER ROLE db_owner ADD MEMBER NandaSurendra;*/
 
 if object_id('Stadium') is not null
     drop table Stadium;
+if object_id('AppUserTeam') is not null
+    drop table AppUserTeam;
 if object_id('Team') is not null
     drop table Team;
 if object_id('Game') is not null
     drop table Game;
+if object_id('AppUser') is not null
+    drop table AppUser;
+if object_id('Coach') is not null
+    drop table Coach;
+if object_id('Roster') is not null
+    drop table Roster;
+if object_id('Position') is not null
+    drop table Position;
+if object_id('Player') is not null
+    drop table Player;
+if object_id('GamePrediction') is not null
+    drop table GamePrediction;
+if object_id('WeeklyPredictionResults') is not null
+    drop table WeeklyPredictionResults;
 
 go
 
@@ -59,6 +75,30 @@ CREATE table Game (
     constraint FK_Game_AwayTeam FOREIGN KEY (AwayTeamID) REFERENCES Team(TeamID),
     constraint FK_Game_WinnerTeam FOREIGN KEY (WinnerTeamID) REFERENCES Team(TeamID),
     constraint FK_Game_Stadium FOREIGN KEY (StadiumID) REFERENCES Stadium(StadiumID)
+);
+
+go
+
+CREATE table AppUser (
+    AppUserID INT NOT NULL IDENTITY(1,1),
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    AppUserEmail VARCHAR(50) NOT NULL,
+    AppUserPassword VARCHAR(50) NOT NULL,
+    constraint PK_AppUser PRIMARY KEY (AppUserID), 
+    constraint UQ_AppUser UNIQUE (AppUserEmail)
+);
+
+go
+
+CREATE table AppUserTeam (
+    AppUserTeamID INT NOT NULL IDENTITY(1,1),
+    AppUserID INT NOT NULL,
+    TeamID INT NOT NULL,
+    constraint PK_AppUserTeam PRIMARY KEY (AppUserTeamID),
+    constraint UQ_AppUserTeam UNIQUE (AppUserID, TeamID),
+    constraint FK_AppUserTeam_AppUser FOREIGN KEY (AppUserID) REFERENCES AppUser(AppUserID),
+    constraint FK_AppUserTeam_Team FOREIGN KEY (TeamID) REFERENCES Team(TeamID)
 );
 
 go
@@ -117,18 +157,6 @@ CREATE TABLE GamePrediction (
     CONSTRAINT FK_GamePrediction_Game FOREIGN KEY (GameID) REFERENCES Game(GameID),
     CONSTRAINT FK_GamePrediction_PredictedTeam FOREIGN KEY (PredictedTeamID) REFERENCES Team(TeamID),
     CONSTRAINT UQ_GamePrediction UNIQUE (AppUserID, GameID)
-);
-
-go
-
-CREATE table AppUser (
-    AppUserID INT NOT NULL IDENTITY(1,1),
-    FirstName VARCHAR(50) NOT NULL,
-    LastName VARCHAR(50) NOT NULL,
-    AppUserEmail VARCHAR(50) NOT NULL,
-    AppUserPassword VARCHAR(50) NOT NULL,
-    constraint PK_AppUser PRIMARY KEY (AppUserID), 
-    constraint UQ_AppUser UNIQUE (AppUserEmail)
 );
 
 go
