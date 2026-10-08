@@ -6,6 +6,10 @@ FOR LOGIN NandaSurendra;
 
 ALTER ROLE db_owner ADD MEMBER NandaSurendra;*/
 
+if object_id('PlayerStats') is not null
+    drop table PlayerStats;
+if object_id('WeeklyPredictionResults') is not null
+    drop table WeeklyPredictionResults;
 if object_id('Stadium') is not null
     drop table Stadium;
 if object_id('AppUserTeam') is not null
@@ -26,8 +30,6 @@ if object_id('Player') is not null
     drop table Player;
 if object_id('GamePrediction') is not null
     drop table GamePrediction;
-if object_id('WeeklyPredictionResults') is not null
-    drop table WeeklyPredictionResults;
 
 go
 
@@ -103,12 +105,13 @@ CREATE table AppUserTeam (
 
 go
 
-CREATE TABLE Coach (
-    CoachID INT NOT NULL IDENTITY(1,1),
-    CoachName VARCHAR(100) NOT NULL,
-    TeamID INT NULL,
-    CONSTRAINT PK_Coach PRIMARY KEY (CoachID),
-    CONSTRAINT FK_Coach_Team FOREIGN KEY (TeamID) REFERENCES Team(TeamID)
+CREATE table WeeklyPredictionResults (
+    WeeklyPredictionResultsID INT NOT NULL IDENTITY(1,1),
+    StartDate DATE NOT NULL DEFAULT GETDATE(),
+    NumberOfCorrectPredictions INT NOT NULL DEFAULT 0,
+    AppUserID INT NOT NULL,
+    constraint PK_WeeklyPredictionResults PRIMARY KEY (WeeklyPredictionResultsID), 
+    constraint FK_WeeklyPredictionResults_AppUser FOREIGN KEY (AppUserID) REFERENCES AppUser(AppUserID),
 );
 
 go
@@ -127,21 +130,42 @@ CREATE TABLE Roster (
 
 go
 
-CREATE table Position (
-    PositionID INT NOT NULL IDENTITY(1,1),
-    PositionName VARCHAR(50) NOT NULL,
-    constraint PK_Position PRIMARY KEY (PositionID), 
-    constraint CK_Position CHECK (PositionName IN ('Quarterback', 'Running Back', 'Defender', 'Returner', 'Kicker','Punter'))
-);
-
-go
-
 CREATE table Player (
     PlayerID INT NOT NULL IDENTITY(1,1),
     PlayerName VARCHAR(100) NOT NULL,
     PlayerDoB DATE NOT NULL,
     PositionID INT NOT NULL,
     constraint PK_Player PRIMARY KEY (PlayerID)
+);
+
+go
+
+CREATE table PlayerStats(
+    PlayerStatsID INT NOT NULL IDENTITY(1,1),
+    PlayerID INT NOT NULL,
+    RosterID INT NOT NULL,
+    CONSTRAINT PK_PlayerStats PRIMARY KEY (PlayerStatsID),
+    CONSTRAINT FK_PlayerStats_Player FOREIGN KEY (PlayerID) REFERENCES Player(PlayerID),
+    CONSTRAINT FK_PlayerStats_Roster FOREIGN KEY (RosterID) REFERENCES Roster(RosterID)
+);
+
+go 
+
+CREATE TABLE Coach (
+    CoachID INT NOT NULL IDENTITY(1,1),
+    CoachName VARCHAR(100) NOT NULL,
+    TeamID INT NULL,
+    CONSTRAINT PK_Coach PRIMARY KEY (CoachID),
+    CONSTRAINT FK_Coach_Team FOREIGN KEY (TeamID) REFERENCES Team(TeamID)
+);
+
+go
+
+CREATE table Position (
+    PositionID INT NOT NULL IDENTITY(1,1),
+    PositionName VARCHAR(50) NOT NULL,
+    constraint PK_Position PRIMARY KEY (PositionID), 
+    constraint CK_Position CHECK (PositionName IN ('Quarterback', 'Running Back', 'Defender', 'Returner', 'Kicker','Punter'))
 );
 
 go
@@ -157,15 +181,4 @@ CREATE TABLE GamePrediction (
     CONSTRAINT FK_GamePrediction_Game FOREIGN KEY (GameID) REFERENCES Game(GameID),
     CONSTRAINT FK_GamePrediction_PredictedTeam FOREIGN KEY (PredictedTeamID) REFERENCES Team(TeamID),
     CONSTRAINT UQ_GamePrediction UNIQUE (AppUserID, GameID)
-);
-
-go
-
-CREATE table WeeklyPredictionResults (
-    WeeklyPredictionResultsID INT NOT NULL IDENTITY(1,1),
-    StartDate DATE NOT NULL,
-    NumberOfCorrectPredictions INT NOT NULL,
-    AppUserID INT NOT NULL,
-    constraint PK_WeeklyPredictionResults PRIMARY KEY (WeeklyPredictionResultsID), 
-    constraint FK_WeeklyPredictionResults_AppUser FOREIGN KEY (AppUserID) REFERENCES AppUser(AppUserID),
 );
