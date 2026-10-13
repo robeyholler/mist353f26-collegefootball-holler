@@ -6,30 +6,32 @@ FOR LOGIN NandaSurendra;
 
 ALTER ROLE db_owner ADD MEMBER NandaSurendra;*/
 
-if object_id('PlayerStats') is not null
-    drop table PlayerStats;
-if object_id('WeeklyPredictionResults') is not null
-    drop table WeeklyPredictionResults;
-if object_id('Stadium') is not null
-    drop table Stadium;
-if object_id('AppUserTeam') is not null
-    drop table AppUserTeam;
-if object_id('Team') is not null
-    drop table Team;
-if object_id('Game') is not null
-    drop table Game;
-if object_id('AppUser') is not null
-    drop table AppUser;
-if object_id('Coach') is not null
-    drop table Coach;
-if object_id('Roster') is not null
-    drop table Roster;
-if object_id('Position') is not null
-    drop table Position;
-if object_id('Player') is not null
-    drop table Player;
 if object_id('GamePrediction') is not null
     drop table GamePrediction;
+if object_id('Coach') is not null
+    drop table Coach;
+if object_id('PlayerPosition') is not null
+    drop table PlayerPosition;
+if object_id('Position') is not null
+    drop table Position;
+if object_id('PlayerStats') is not null
+    drop table PlayerStats;
+if object_id('Player') is not null
+    drop table Player;
+if object_id('Roster') is not null
+    drop table Roster;
+if object_id('WeeklyPredictionResults') is not null
+    drop table WeeklyPredictionResults;
+if object_id('AppUserTeam') is not null
+    drop table AppUserTeam;
+if object_id('AppUser') is not null
+    drop table AppUser;
+if object_id('Game') is not null
+    drop table Game;
+if object_id('Team') is not null
+    drop table Team;
+if object_id('Stadium') is not null
+    drop table Stadium;
 
 go
 
@@ -134,29 +136,20 @@ CREATE table Player (
     PlayerID INT NOT NULL IDENTITY(1,1),
     PlayerName VARCHAR(100) NOT NULL,
     PlayerDoB DATE NOT NULL,
-    PositionID INT NOT NULL,
-    constraint PK_Player PRIMARY KEY (PlayerID)
+    constraint PK_Player PRIMARY KEY (PlayerID),
+    constraint UQ_Player UNIQUE (PlayerName, PlayerDoB)
 );
 
-go
+go 
 
 CREATE table PlayerStats(
     PlayerStatsID INT NOT NULL IDENTITY(1,1),
     PlayerID INT NOT NULL,
     RosterID INT NOT NULL,
     CONSTRAINT PK_PlayerStats PRIMARY KEY (PlayerStatsID),
+    CONSTRAINT UQ_PlayerStats UNIQUE (PlayerID, RosterID),
     CONSTRAINT FK_PlayerStats_Player FOREIGN KEY (PlayerID) REFERENCES Player(PlayerID),
     CONSTRAINT FK_PlayerStats_Roster FOREIGN KEY (RosterID) REFERENCES Roster(RosterID)
-);
-
-go 
-
-CREATE TABLE Coach (
-    CoachID INT NOT NULL IDENTITY(1,1),
-    CoachName VARCHAR(100) NOT NULL,
-    TeamID INT NULL,
-    CONSTRAINT PK_Coach PRIMARY KEY (CoachID),
-    CONSTRAINT FK_Coach_Team FOREIGN KEY (TeamID) REFERENCES Team(TeamID)
 );
 
 go
@@ -165,7 +158,30 @@ CREATE table Position (
     PositionID INT NOT NULL IDENTITY(1,1),
     PositionName VARCHAR(50) NOT NULL,
     constraint PK_Position PRIMARY KEY (PositionID), 
-    constraint CK_Position CHECK (PositionName IN ('Quarterback', 'Running Back', 'Defender', 'Returner', 'Kicker','Punter'))
+    constraint UQ_Position UNIQUE (PositionName),
+    constraint CK_Position CHECK (PositionName IN ('QB', 'RB', 'WR', 'Returner', 'Kicker','Punter'))
+);
+
+go
+
+Create table PlayerPosition (
+    PlayerPositionID INT NOT NULL IDENTITY(1,1),
+    PlayerID INT NOT NULL,
+    PositionID INT NOT NULL,
+    constraint PK_PlayerPosition PRIMARY KEY (PlayerPositionID), 
+    constraint UQ_PlayerPosition UNIQUE (PlayerID, PositionID),
+    constraint FK_PlayerPosition_Player FOREIGN KEY (PlayerID) REFERENCES Player(PlayerID),
+    constraint FK_PlayerPosition_Position FOREIGN KEY (PositionID) REFERENCES Position(PositionID)
+);
+
+GO
+
+CREATE TABLE Coach (
+    CoachID INT NOT NULL IDENTITY(1,1),
+    CoachName VARCHAR(100) NOT NULL,
+    TeamID INT NULL,
+    CONSTRAINT PK_Coach PRIMARY KEY (CoachID),
+    CONSTRAINT FK_Coach_Team FOREIGN KEY (TeamID) REFERENCES Team(TeamID)
 );
 
 go
