@@ -6,6 +6,8 @@ FOR LOGIN NandaSurendra;
 
 ALTER ROLE db_owner ADD MEMBER NandaSurendra;*/
 
+if object_id('CoachRoster') is not null
+    drop table CoachRoster;
 if object_id('PunterStats') is not null 
     drop table PunterStats;
 if object_id('KickerStats') is not null 
@@ -297,6 +299,18 @@ CREATE TABLE Coach (
     TeamID INT NULL,
     CONSTRAINT PK_Coach PRIMARY KEY (CoachID),
     CONSTRAINT FK_Coach_Team FOREIGN KEY (TeamID) REFERENCES Team(TeamID)
+);
+
+go
+
+CREATE table CoachRoster (
+    CoachRosterID INT NOT NULL IDENTITY(1,1),
+    CoachID INT NOT NULL,
+    RosterID INT NOT NULL,
+    constraint PK_CoachRoster PRIMARY KEY (CoachRosterID), 
+    constraint UQ_CoachRoster UNIQUE (CoachID, RosterID),
+    constraint FK_CoachRoster_Coach FOREIGN KEY (CoachID) REFERENCES Coach(CoachID),
+    constraint FK_CoachRoster_Roster FOREIGN KEY (RosterID) REFERENCES Roster(RosterID)
 );
 
 go
