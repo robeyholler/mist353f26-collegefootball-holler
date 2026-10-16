@@ -182,22 +182,20 @@ CREATE table PlayerStats(
 go
 
 CREATE table QBStats (
-    QBStatsID INT NOT NULL IDENTITY(1,1),
-    PlayerStatsID INT NOT NULL,
+    QBStatsID INT NOT NULL,
     Attempts INT NOT NULL,
     Completions INT NOT NULL,
     Yards INT NOT NULL,
     TDs INT NOT NULL,
     INTs INT NOT NULL,
     CONSTRAINT PK_QBStats PRIMARY KEY (QBStatsID),
-    CONSTRAINT UQ_QBStats UNIQUE (PlayerStatsID),
-    CONSTRAINT FK_QBStats_PlayerStats FOREIGN KEY (PlayerStatsID) REFERENCES PlayerStats(PlayerStatsID)
+    CONSTRAINT FK_QBStats_PlayerStats FOREIGN KEY (QBStatsID) REFERENCES PlayerStats(PlayerStatsID)
 );
 
 go
 
 CREATE table RBStats (
-    RBStatsID INT NOT NULL IDENTITY(1,1),
+    RBStatsID INT NOT NULL,
     PlayerStatsID INT NOT NULL,
     Carries INT NOT NULL,
     Yards INT NOT NULL,
@@ -212,7 +210,7 @@ CREATE table RBStats (
 go
 
 CREATE table DefenderStats (
-    DefenderStatsID INT NOT NULL IDENTITY(1,1),
+    DefenderStatsID INT NOT NULL,
     PlayerStatsID INT NOT NULL,
     Tackles INT NOT NULL,
     Sacks INT NOT NULL,
@@ -226,7 +224,7 @@ CREATE table DefenderStats (
 go
 
 CREATE table ReturnerStats (
-    ReturnerStatsID INT NOT NULL IDENTITY(1,1),
+    ReturnerStatsID INT NOT NULL,
     PlayerStatsID INT NOT NULL,
     KickOffAttempts INT NOT NULL,
     KickOffYards INT NOT NULL,
@@ -244,7 +242,7 @@ CREATE table ReturnerStats (
 go
 
 CREATE table KickerStats (
-    KickerStatsID INT NOT NULL IDENTITY(1,1),
+    KickerStatsID INT NOT NULL,
     PlayerStatsID INT NOT NULL,
     FieldGoalAttempts INT NOT NULL,
     FieldGoalsMade INT NOT NULL,
@@ -259,7 +257,7 @@ CREATE table KickerStats (
 go
 
 CREATE table PunterStats (
-    PunterStatsID INT NOT NULL IDENTITY(1,1),
+    PunterStatsID INT NOT NULL,
     PlayerStatsID INT NOT NULL,
     Punts INT NOT NULL,
     Yards INT NOT NULL,
