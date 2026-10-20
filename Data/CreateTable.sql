@@ -196,36 +196,31 @@ go
 
 CREATE table RBStats (
     RBStatsID INT NOT NULL,
-    PlayerStatsID INT NOT NULL,
     Carries INT NOT NULL,
     Yards INT NOT NULL,
     TDs INT NOT NULL,
     Long INT NOT NULL,
     Fumbles INT NOT NULL,
     CONSTRAINT PK_RBStats PRIMARY KEY (RBStatsID),
-    CONSTRAINT UQ_RBStats UNIQUE (PlayerStatsID),
-    CONSTRAINT FK_RBStats_PlayerStats FOREIGN KEY (PlayerStatsID) REFERENCES PlayerStats(PlayerStatsID)
+    CONSTRAINT FK_RBStats_PlayerStats FOREIGN KEY (RBStatsID) REFERENCES PlayerStats(PlayerStatsID)
 );
 
 go
 
 CREATE table DefenderStats (
     DefenderStatsID INT NOT NULL,
-    PlayerStatsID INT NOT NULL,
     Tackles INT NOT NULL,
     Sacks INT NOT NULL,
     INTs INT NOT NULL,
     DefensiveTDs INT NOT NULL,
     CONSTRAINT PK_DefenderStats PRIMARY KEY (DefenderStatsID),
-    CONSTRAINT UQ_QBStats UNIQUE (PlayerStatsID),
-    CONSTRAINT FK_DefenderStats_PlayerStats FOREIGN KEY (PlayerStatsID) REFERENCES PlayerStats(PlayerStatsID)
+    CONSTRAINT FK_DefenderStats_PlayerStats FOREIGN KEY (DefenderStatsID) REFERENCES PlayerStats(PlayerStatsID)
 );
 
 go
 
 CREATE table ReturnerStats (
     ReturnerStatsID INT NOT NULL,
-    PlayerStatsID INT NOT NULL,
     KickOffAttempts INT NOT NULL,
     KickOffYards INT NOT NULL,
     KickOffLong INT NOT NULL,
@@ -235,36 +230,31 @@ CREATE table ReturnerStats (
     PuntReturnLong INT NOT NULL,
     PuntReturnTDs INT NOT NULL,
     CONSTRAINT PK_ReturnerStats PRIMARY KEY (ReturnerStatsID),
-    CONSTRAINT UQ_QBStats UNIQUE (PlayerStatsID),
-    CONSTRAINT FK_ReturnerStats_PlayerStats FOREIGN KEY (PlayerStatsID) REFERENCES PlayerStats(PlayerStatsID)
+    CONSTRAINT FK_ReturnerStats_PlayerStats FOREIGN KEY (ReturnerStatsID) REFERENCES PlayerStats(PlayerStatsID)
 );
 
 go
 
 CREATE table KickerStats (
     KickerStatsID INT NOT NULL,
-    PlayerStatsID INT NOT NULL,
     FieldGoalAttempts INT NOT NULL,
     FieldGoalsMade INT NOT NULL,
     Long INT NOT NULL,
     ExtraPointAttempts INT NOT NULL,
     ExtraPointsMade INT NOT NULL,
     CONSTRAINT PK_KickerStats PRIMARY KEY (KickerStatsID),
-    CONSTRAINT UQ_QBStats UNIQUE (PlayerStatsID),
-    CONSTRAINT FK_KickerStats_PlayerStats FOREIGN KEY (PlayerStatsID) REFERENCES PlayerStats(PlayerStatsID)
+    CONSTRAINT FK_KickerStats_PlayerStats FOREIGN KEY (KickerStatsID) REFERENCES PlayerStats(PlayerStatsID)
 );
 
 go
 
 CREATE table PunterStats (
     PunterStatsID INT NOT NULL,
-    PlayerStatsID INT NOT NULL,
     Punts INT NOT NULL,
     Yards INT NOT NULL,
     Long INT NOT NULL,
     CONSTRAINT PK_PunterStats PRIMARY KEY (PunterStatsID),
-    CONSTRAINT UQ_QBStats UNIQUE (PlayerStatsID),
-    CONSTRAINT FK_PunterStats_PlayerStats FOREIGN KEY (PlayerStatsID) REFERENCES PlayerStats(PlayerStatsID)
+    CONSTRAINT FK_PunterStats_PlayerStats FOREIGN KEY (PunterStatsID) REFERENCES PlayerStats(PlayerStatsID)
 );
 
 go
