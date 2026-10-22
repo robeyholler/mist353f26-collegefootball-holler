@@ -6,6 +6,8 @@ FOR LOGIN NandaSurendra;
 
 ALTER ROLE db_owner ADD MEMBER NandaSurendra;*/
 
+if object_id('WeeklyGamesOfInterest') is not null
+    drop table WeeklyGamesOfInterest;
 if object_id('CoachRoster') is not null
     drop table CoachRoster;
 if object_id('WRStats') is not null 
@@ -329,4 +331,14 @@ CREATE table CoachRoster (
     constraint UQ_CoachRoster UNIQUE (CoachID, RosterID),
     constraint FK_CoachRoster_Coach FOREIGN KEY (CoachID) REFERENCES Coach(CoachID),
     constraint FK_CoachRoster_Roster FOREIGN KEY (RosterID) REFERENCES Roster(RosterID)
+);
+
+go
+
+CREATE table WeeklyGamesOfInterest (
+    WeeklyGamesOfInterestID INT NOT NULL IDENTITY(1,1),
+    StartDate DATE NOT NULL,
+    GameID INT NOT NULL,
+    CONSTRAINT PK_WeeklyGamesOfInterest PRIMARY KEY (WeeklyGamesOfInterestID),
+    CONSTRAINT FK_WeeklyGamesOfInterest_Game FOREIGN KEY (GameID) REFERENCES Game(GameID)
 );
