@@ -101,6 +101,7 @@ CREATE table Game (
     AwayTeamID INT NOT NULL,
     WinnerTeamID INT NULL,
     StadiumID INT NOT NULL,
+    WeeklyGamesOfInterestID INT NULL,
     constraint PK_Game PRIMARY KEY (GameID), 
     constraint UQ_Game UNIQUE (GameDate, GameTime, StadiumID), 
     constraint FK_Game_HomeTeam FOREIGN KEY (HomeTeamID) REFERENCES Team(TeamID),
